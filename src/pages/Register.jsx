@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GoogleIcon from "../assets/icons/GoogleIcon";
-import { createUser } from "../auth/firebase";
+import { createUser, signUpWithGoogle } from "../auth/firebase";
 
 const Register = () => {
   //* ayrı stateler
@@ -10,7 +10,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   //* birleştirilmiş state
   // const [info, setInfo] = useState({
@@ -20,16 +20,21 @@ const Register = () => {
   //   password: "",
   // });
 
-  const handlesubmit = (e) => {
-    e.preventDefault();
-    createUser(email, password, navigate);
-    console.log(firstName, lastName);
-  };
-
   //* birleştirilmiş state kullanıldığında üzerine yazmaması için önce var olan infoyu spread ediyoruz,
   //* sonra target id/name den yakalayıp değişen valueye atama yapıyoruz.
   // const hadleChange = (e) =>
   //   setInfo({ ...info, [e.target.id]: e.target.value });
+
+  const handlesubmit = (e) => {
+    e.preventDefault();
+    const displayName = `${firstName} ${lastName}`;
+    createUser(email, password, navigate, displayName);
+    console.log(firstName, lastName);
+  };
+
+  const handleGoogleProvider = () => {
+    signUpWithGoogle(navigate);
+  };
 
   return (
     <div className="flex justify-center">
@@ -107,6 +112,7 @@ const Register = () => {
             <button
               className="flex justify-between border-none outline-none bg-[#ff4b45] custom-input w-[300px] mt-[15px] rounded-[4px] font-[600] cursor-pointer"
               type="button"
+              onClick={handleGoogleProvider}
             >
               Continue with Google
               <GoogleIcon color="currentColor" />
